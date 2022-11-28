@@ -3,7 +3,7 @@
 #include <sstream>		// String Stream
 #include <string>
 
-int main()
+int main2()
 {
 	// Open the file
 	std::ifstream namesFile("Names_2010Census.csv");
