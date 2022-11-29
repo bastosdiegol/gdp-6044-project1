@@ -2,29 +2,18 @@
 
 #include "tDLList.h"
 #include "cPerson.h"
+#include "cSnotify.h"
 
 int main(int argc, char* argv[]) {
-	tDLList<cPerson*> myArray;
-	
-	cPerson* p;
-	p = new cPerson();
-	myArray.pushBack(p);
-	p = new cPerson();
-	myArray.pushBack(p);
-	p = new cPerson();
-	myArray.pushBack(p);
-	p = new cPerson();
-	myArray.pushBack(p);
-	p = new cPerson();
-	myArray.pushBack(p);
+	cSnotify g_snotify;
 
+	g_snotify.LoadSongsFromFile();
 
-	std::cout << "List Size: " << myArray.getSize() << std::endl;
-
-	for (int i = 0; i < myArray.getSize(); i++) {
-		//p = myArray.getAt(i);
-		//if (p != nullptr) {
-			std::cout << "Array[" << i << "] = " << myArray.getAt(i)->getSnotifyUniqueUserID() << std::endl;
-		//}
-	}
+	return 0;
+	//for (int i = 0; i < g_snotify.v_songs.getSize(); i++) {
+	//	//p = myArray.getAt(i);
+	//	//if (p != nullptr) {
+	//		std::cout << "Array[" << i << "] Song[" << g_snotify.v_songs.getAt(i)->name << "] Artist [" << g_snotify.v_songs.getAt(i)->artist << "]" << std::endl;
+	//	//}
+	//}
 }

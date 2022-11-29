@@ -2,13 +2,17 @@
 
 template <class T>
 class tNode {
+	// Only Doubly Linked List can instantiate this class
+	template <class T> friend class tDLList;
+
 private:
 	T m_data;
+	// No one should instantiate this class
+	tNode(T data);
 public:
 	tNode<T>* m_previous;
 	tNode<T>* m_next;
 
-	tNode(T data);
 	~tNode();
 
 	T getData();
