@@ -8,11 +8,8 @@
 class cSong
 {
 public:
-	cSong()
-	{
-		this->rating = 0;
-		this->numberOfTimesPlayed = 0;
-	}
+	cSong();
+	~cSong();
 	std::string name;
 	std::string artist;
 	// These are used for user play statistics
@@ -26,6 +23,8 @@ public:
 	unsigned int getUniqueID(void) { return this->uniqueID; }
 
 	unsigned int uniqueID;
+private:	
+	static unsigned int m_NEXT_Snotify_UniqueSongID;
 }; 
 
 #endif

@@ -2,10 +2,14 @@
 #define _cMusicGenerator_HG_
 
 #include "cSong.h"
+#include "tDLList.h"
 
 class cMusicGenerator
 {
+private:
+	tDLList<cSong*>	v_songs;
 public:
+
 	cMusicGenerator();
 	~cMusicGenerator();
 

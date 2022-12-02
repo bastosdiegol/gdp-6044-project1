@@ -14,13 +14,13 @@ cPerson::cPerson()
 	// Generate unique Snotify ID
 	this->m_Snotify_UniqueUserID = cPerson::m_NEXT_Snotify_UniqueUSerID;
 	// Increment for next created user by a small random amount 
-	const unsigned int MAX_ID_INCREEMNT = 11;
+	const unsigned int MAX_ID_INCREEMNT = 5;
 	cPerson::m_NEXT_Snotify_UniqueUSerID += (rand() % MAX_ID_INCREEMNT);
 }
 
 // The 1st Snotify user will have ID: 10,000,000
 // static 
-unsigned int cPerson::m_NEXT_Snotify_UniqueUSerID = 10000000;
+unsigned int cPerson::m_NEXT_Snotify_UniqueUSerID = 1;
 
 
 cPerson::~cPerson()

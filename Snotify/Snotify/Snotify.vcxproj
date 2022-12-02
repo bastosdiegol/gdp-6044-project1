@@ -148,9 +148,11 @@
     <ClInclude Include="tNode.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cMusicGenerator.cpp" />
     <ClCompile Include="cPerson.cpp" />
     <ClCompile Include="cPersonGenerator.cpp" />
     <ClCompile Include="cSnotify.cpp" />
+    <ClCompile Include="cSong.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="read_Names_2010Census.cpp" />
   </ItemGroup>

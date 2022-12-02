@@ -4,6 +4,7 @@
 #include "cPerson.h"
 #include "cSong.h"
 #include "tDLList.h"
+#include "cMusicGenerator.h"
 
 #define SONGS_PATH_FILE "./data/hot_stuff_2.csv"
 
@@ -12,6 +13,7 @@ class cSnotify
 public:
 	tDLList<cSong*>		v_songs;
 	tDLList<cPerson*>	v_users;
+	cMusicGenerator		m_musicGen;
 
 public:
 	cSnotify();
@@ -84,8 +86,6 @@ public:
 	bool FindUsersLastName(std::string lastName, cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray);
 	// Sorted ascending by last name THEN first name.
 	bool FindUsersFirstLastNames(std::string firstName, std::string lastName, cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray);
-
-	bool LoadSongsFromFile(std::string filePath = SONGS_PATH_FILE);
 };
 
 #endif // !_cSnotify_HG_
