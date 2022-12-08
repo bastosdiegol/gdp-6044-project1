@@ -32,5 +32,15 @@ int main(int argc, char* argv[]) {
 		std::cout << "Total songs added: " << songsToTransfer - duplicated << "." << std::endl;
 	}
 	g_snotify.m_personGen.LoadCensusFiles(NAME_FILE, SURNAME_FILE, STREETNAME_FILE, errorMsg);
+	std::cout << "Now generating random persons from PersonGenerator to Snotify..." << std::endl;
+	std::cout << "Trying to add " << songsToTransfer << " random persons to the Snotify." << std::endl;
+	for (int i = 0; i < songsToTransfer; i++) {
+		cPerson* randomPerson = g_snotify.m_personGen.generateRandomPerson();
+		g_snotify.v_users.pushBack(randomPerson);
+		//if (!g_snotify.AddSong(randomSong, errorMsg)) {
+		//	duplicated++;
+		//}
+	}
+	std::cout << "Total persons added: " << songsToTransfer << "." << std::endl;
 	return 0;
 }

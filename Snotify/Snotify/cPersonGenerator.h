@@ -8,13 +8,15 @@
 class cPersonGenerator
 {
 private:
-	tDLList<std::string> m_maleNames;
-	tDLList<std::string> m_femaleNames;
-	tDLList<std::string> m_nobinaryNames;
+	tDLList<std::string> v_maleNames;
+	tDLList<std::string> v_femaleNames;
+	tDLList<std::string> v_nobinaryNames;
 
-	tDLList<std::string> m_surnames;
+	tDLList<std::string> v_surnames;
 
-	tDLList<std::string> m_streetnames[3];
+	tDLList<std::string> v_streetnames[3];
+
+	tDLList<std::string> v_ProvincesAndCities[13];
 
 public:
 	cPersonGenerator();
@@ -48,6 +50,8 @@ public:
 	// Randomly generates a person from the data
 	// Returns 0, NULL, or nullptr if it can't do this. 
 	cPerson* generateRandomPerson(void);
+
+	void LoadProvincesAndCities(void);
 };
 
 
