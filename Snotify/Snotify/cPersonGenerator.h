@@ -3,9 +3,19 @@
 
 #include <string>
 #include "cPerson.h"
+#include "tDLList.h"
 
 class cPersonGenerator
 {
+private:
+	tDLList<std::string> m_maleNames;
+	tDLList<std::string> m_femaleNames;
+	tDLList<std::string> m_nobinaryNames;
+
+	tDLList<std::string> m_surnames;
+
+	tDLList<std::string> m_streetnames[3];
+
 public:
 	cPersonGenerator();
 	~cPersonGenerator();

@@ -16,7 +16,7 @@
 int main(int argc, char* argv[]) {
 	cSnotify g_snotify;
 	std::string errorMsg;
-	g_snotify.m_musicGen.LoadMusicInformation(SONGS_PATH_FILE, errorMsg);
+	g_snotify.m_musicGen.LoadMusicInformation(SONGS_FILE, errorMsg);
 	int duplicated = 0;
 	int songsToTransfer = 1000;
 	std::cout << "Now transfering random songs from MusicGenerator to Snotify..." << std::endl;
@@ -31,5 +31,6 @@ int main(int argc, char* argv[]) {
 		std::cout << "Of these, " << duplicated << " songs were duplciated and skipped." << std::endl;
 		std::cout << "Total songs added: " << songsToTransfer - duplicated << "." << std::endl;
 	}
+	g_snotify.m_personGen.LoadCensusFiles(NAME_FILE, SURNAME_FILE, STREETNAME_FILE, errorMsg);
 	return 0;
 }

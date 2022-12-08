@@ -40,6 +40,11 @@ public:
 	/// <param name="data">Template variable</param>
 	void pushBack(T data);
 	/// <summary>
+	/// Finds the tNode specified and inserts a new node there
+	/// </summary>
+	/// <param name="data">The data to be alocated at</param>
+	void addAt(int index, T data);
+	/// <summary>
 	/// Finds the tNode at specified index and removes it
 	/// </summary>
 	/// <param name="index">Specified index</param>
@@ -50,6 +55,17 @@ public:
 	/// <param name="index">Specified Index</param>
 	/// <returns>Template variable stored at that tNode</returns>
 	T getAt(int index);
+	/// <summary>
+	/// Verifies if a specified data exists on the list
+	/// </summary>
+	/// <param name="data">Data to be looked for</param>
+	/// <returns>True if it already exists</returns>
+	bool exists(T data);
+	/// <summary>
+	/// Tries to find a node with a specified data and remove it if found
+	/// </summary>
+	/// <param name="data">Specified data</param>
+	bool remove(T data);
 };
 
 template<class T>
@@ -122,6 +138,35 @@ inline void tDLList<T>::addAtTheEnd(T data) {
 template <class T>
 inline void tDLList<T>::pushBack(T data) {
 	this->addAtTheEnd(data);
+}
+
+template<class T>
+inline void tDLList<T>::addAt(int index, T data) {
+	// Checks if its add at head
+	if (index == 0) {
+		this->addAtTheBeginning(data);
+	// Checks if its add at tail
+	} else if (index == (m_size - 1)) { 
+		this->addAtTheEnd(data);
+	// Its in between somewhere
+	} else { 
+		// Creates the new Node
+		tNode<T>* newNode = tNode<T>(data);
+		// Gets the current Node at same index
+		tNode<T>* curNode = getNodeAt(index);
+
+		// Links the new node with previous and next
+		newNode->m_previous = curNode->m_previous;
+		newNode->m_next		= curNode;
+
+		// Links previous node with the new node
+		curNode->m_previous->m_next = newNode;
+		// Links the curNode with the new node
+		curNode->m_previous = newNode;
+
+		// Increments the size
+		m_size++;
+	}
 }
 
 template<class T>
@@ -238,4 +283,39 @@ inline T tDLList<T>::getAt(int index) {
 			temp = temp->m_previous;
 		}
 	}
+}
+
+template<class T>
+inline bool tDLList<T>::exists(T data) {
+	tNode<T>* curNode = m_head; 
+	// Iterates through all the nodes of the list
+	while (curNode != nullptr) {
+		// Compares both data
+		if (curNode->m_data == data) {
+			return true; // True if equals
+		}
+		// Increments current node
+		curNode = curNode->m_next;
+	}
+	// Data not found
+	return false;
+}
+
+template<class T>
+inline bool tDLList<T>::remove(T data) {
+	tNode<T>* curNode = m_head;
+	int index = 0;
+	// Iterates through all the nodes of the list
+	while (curNode != nullptr) {
+		// Compares both data
+		if (curNode->m_data == data) {
+			removeAt(index);
+			return true; // True if equals
+		}
+		// Increments current node
+		curNode = curNode->m_next;
+		index++;
+	}
+	// Data not found
+	return false;
 }

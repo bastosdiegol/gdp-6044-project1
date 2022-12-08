@@ -30,11 +30,11 @@ cMusicGenerator::~cMusicGenerator() {
 
 bool cMusicGenerator::LoadMusicInformation(std::string musicFileName, std::string& errorString) {
 	DEBUG_PRINT("cMusicGenerator::LoadMusicInformation(%s)\n", musicFileName.c_str());
-	std::cout << "MusicGenerator is loading songs..." << std::endl;
+	DEBUG_PRINT("MusicGenerator is loading songs...\n");
 	// Open the file
 	std::ifstream songsFile(musicFileName);
 	if (!songsFile.is_open()) {
-		errorString = "File couldn't be opened.";
+		errorString = "File couldn't be opened.\n";
 		return false;
 	}
 
@@ -72,7 +72,7 @@ bool cMusicGenerator::LoadMusicInformation(std::string musicFileName, std::strin
 		v_songs.pushBack(newSong);
 	}
 
-	std::cout << "MusicGenerator loaded " << lineCount << " songs." << std::endl;
+	DEBUG_PRINT("MusicGenerator loaded %d songs.\n", lineCount);
 
 	return true;
 }

@@ -5,8 +5,12 @@
 #include "cSong.h"
 #include "tDLList.h"
 #include "cMusicGenerator.h"
+#include "cPersonGenerator.h"
 
-#define SONGS_PATH_FILE "./data/hot_stuff_2.csv"
+#define SONGS_FILE		"./data/hot_stuff_2.csv"
+#define NAME_FILE		"./data/yob1986.txt"
+#define SURNAME_FILE	"./data/Names_2010Census.csv"
+#define STREETNAME_FILE	"./data/Street_Names.csv"
 
 class cSnotify
 {
@@ -14,6 +18,7 @@ public:
 	tDLList<cSong*>		v_songs;
 	tDLList<cPerson*>	v_users;
 	cMusicGenerator		m_musicGen;
+	cPersonGenerator	m_personGen;
 
 public:
 	cSnotify();
