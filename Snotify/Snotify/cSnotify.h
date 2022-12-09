@@ -12,19 +12,23 @@
 #define SURNAME_FILE	"./data/Names_2010Census.csv"
 #define STREETNAME_FILE	"./data/Street_Names.csv"
 
+struct UserSongInfo {
+	cSong* theSong;
+	int rating;
+	int numberOfTimesPlayed;
+};
+
+struct UserLibrary {
+	cPerson* theUser;
+	tDLList<UserSongInfo*> songLibrary;
+};
+
 class cSnotify
 {
 private:
-	struct UserSongInfo {
-		cSong* theSong;
-		int rating;
-		int numberOfTimesPlayed;
-	};
+	UserLibrary* getUserLibrary(unsigned int SnotifyUserID);
+	UserSongInfo* getUserSongInfo(unsigned int SnotifyUserID, unsigned int songUniqueID);
 
-	struct UserLibrary {
-		cPerson* theUser;
-		tDLList<UserSongInfo*> songLibrary;
-	};
 public:
 	tDLList<cSong*>			v_songs;
 	tDLList<cPerson*>		v_users;
