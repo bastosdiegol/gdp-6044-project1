@@ -200,3 +200,37 @@ cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID) {
 		return nullptr;
 	}
 }
+
+cSong* cSnotify::FindSong(std::string title, std::string artist) {
+	bool found = false;
+	cSong* theSong = nullptr;
+	for (int i = 0; i < v_songs.getSize(); i++) {
+		theSong = v_songs.getAt(i);
+		if (theSong->name == title && theSong->artist == artist) {
+			found = true;
+			break;
+		}
+	}
+	if (found) {
+		return theSong;
+	} else {
+		return nullptr;
+	}
+}
+
+cSong* cSnotify::FindSong(unsigned int uniqueID) {
+	bool found = false;
+	cSong* theSong = nullptr;
+	for (int i = 0; i < v_songs.getSize(); i++) {
+		theSong = v_songs.getAt(i);
+		if (theSong->getUniqueID() == uniqueID) {
+			found = true;
+			break;
+		}
+	}
+	if (found) {
+		return theSong;
+	} else {
+		return nullptr;
+	}
+}
