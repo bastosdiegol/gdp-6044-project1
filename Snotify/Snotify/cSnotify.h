@@ -14,9 +14,21 @@
 
 class cSnotify
 {
+private:
+	struct UserSongInfo {
+		cSong* theSong;
+		int rating;
+		int numberOfTimesPlayed;
+	};
+
+	struct UserLibrary {
+		cPerson* theUser;
+		tDLList<UserSongInfo*> songLibrary;
+	};
 public:
-	tDLList<cSong*>		v_songs;
-	tDLList<cPerson*>	v_users;
+	tDLList<cSong*>			v_songs;
+	tDLList<cPerson*>		v_users;
+	tDLList<UserLibrary*>	v_usersSongLib;
 
 public:
 	cSnotify();

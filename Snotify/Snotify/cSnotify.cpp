@@ -56,6 +56,14 @@ cSnotify::~cSnotify() {
 		v_users.removeAt(index);
 		index--;
 	}
+	index = v_usersSongLib.getSize() - 1;
+	while (index >= 0) {
+		// Delete the user lib pointer
+		delete v_usersSongLib.getAt(index);
+		// Removes the node pointing to null from the list
+		v_usersSongLib.removeAt(index);
+		index--;
+	}
 }
 
 bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString) {
@@ -80,6 +88,12 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString) {
 			// First Song
 			if (v_users.getSize() == 0) {
 				this->v_users.pushBack(newPerson);
+				// Creates a song library for new user
+				UserLibrary* newlib = new UserLibrary();
+				// Links the library to the user
+				newlib->theUser = newPerson;
+				// Adds it to the array
+				this->v_usersSongLib.pushBack(newlib);
 				return true;
 			} else {
 				// Checks if it already exists
@@ -97,6 +111,12 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString) {
 				} else {
 					// Doesn't exists
 					this->v_users.pushBack(newPerson);
+					// Creates a song library for new user
+					UserLibrary* newlib = new UserLibrary();
+					// Links the library to the user
+					newlib->theUser = newPerson;
+					// Adds it to the array
+					this->v_usersSongLib.pushBack(newlib);
 					return true;
 				}
 			}
@@ -111,14 +131,17 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString) {
 bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString) {
 	bool found = false;
 	cPerson* thePerson = nullptr;
+	// Iterates through users array
 	for (int i = 0; i < v_users.getSize(); i++) {
 		thePerson = v_users.getAt(i);
+		// Checks if SIN and ID matches
 		if (thePerson->SIN == pPerson->SIN && thePerson->getSnotifyUniqueUserID() == pPerson->getSnotifyUniqueUserID()) {
 			found = true;
 			break;
 		}
 	}
 	if (found) {
+		// Copy the new date over
 		(*thePerson) = (*pPerson);
 		return true;
 	} else {
@@ -167,11 +190,80 @@ bool cSnotify::AddSong(cSong* pSong, std::string& errorString) {
 	}
 }
 
+bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong, std::string& errorString) {
+	bool found = false;
+	UserLibrary* theLib = nullptr;
+	// Iterates through usersSongLibrary array
+	for (int i = 0; i < v_usersSongLib.getSize(); i++) {
+		theLib = v_usersSongLib.getAt(i);
+		// Checks if userID matches
+		if (theLib->theUser->getSnotifyUniqueUserID() == snotifyUserID) {
+			found = true;
+			break;
+		}
+	}
+	if (found) {
+		// Creates a new song info node
+		UserSongInfo* newSongInfo = new UserSongInfo();
+		// Links the song to it
+		newSongInfo->theSong = pNewSong;
+		newSongInfo->rating = 0;
+		newSongInfo->numberOfTimesPlayed = 0;
+		// Pushes it back to the userSongLibrary
+		theLib->songLibrary.pushBack(newSongInfo);
+		return true;
+	} else {
+		errorString = "No user library was found with the informed userID.";
+		return false;
+	}
+}
+
+bool cSnotify::RemoveSongFromUserLibrary(unsigned int snotifyUserID, unsigned int SnotifySongID, std::string& errorString) {
+	bool userFound = false;
+	bool songFound = false;
+	bool songIndex;
+	UserLibrary* theLib = nullptr;
+	UserSongInfo* userSongInfo = nullptr;
+	// Iterates through usersSongLibrary array
+	for (int i = 0; i < v_usersSongLib.getSize(); i++) {
+		theLib = v_usersSongLib.getAt(i);
+		// Checks if userID matches
+		if (theLib->theUser->getSnotifyUniqueUserID() == snotifyUserID) {
+			userFound = true;
+			break;
+		}
+	}
+	if (userFound) { // The user Lib
+		// Iterates through usersSongLibrary array
+		for (int i = 0; i < theLib->songLibrary.getSize(); i++) {
+			userSongInfo = theLib->songLibrary.getAt(i);
+			// Checks if songID matches
+			if (userSongInfo->theSong->getUniqueID() == SnotifySongID) {
+				songFound = true;
+				songIndex = i;
+				break;
+			}
+		}
+		if (songFound) {
+			theLib->songLibrary.removeAt(songIndex);
+			return true;
+		} else {
+			errorString = "No song was found on the user library with the informed songID.";
+			return false;
+		}
+	} else {
+		errorString = "No user library was found with the informed userID.";
+		return false;
+	}
+}
+
 cPerson* cSnotify::FindUserBySIN(unsigned int SIN) {
 	bool found = false;
 	cPerson* thePerson = nullptr;
+	// Iterates through users array
 	for (int i = 0; i < v_users.getSize(); i++) {
 		thePerson = v_users.getAt(i);
+		// Checks if SIN matches
 		if (thePerson->SIN == SIN) {
 			found = true;
 			break;
@@ -187,8 +279,10 @@ cPerson* cSnotify::FindUserBySIN(unsigned int SIN) {
 cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID) {
 	bool found = false;
 	cPerson* thePerson = nullptr;
+	// Iterates through users array
 	for (int i = 0; i < v_users.getSize(); i++) {
 		thePerson = v_users.getAt(i);
+		// Checks if ID matches
 		if (thePerson->getSnotifyUniqueUserID() == SnotifyID) {
 			found = true;
 			break;
@@ -204,8 +298,10 @@ cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID) {
 cSong* cSnotify::FindSong(std::string title, std::string artist) {
 	bool found = false;
 	cSong* theSong = nullptr;
+	// Iterates through songs array
 	for (int i = 0; i < v_songs.getSize(); i++) {
 		theSong = v_songs.getAt(i);
+		// Checks if title and artist matches
 		if (theSong->name == title && theSong->artist == artist) {
 			found = true;
 			break;
@@ -221,8 +317,10 @@ cSong* cSnotify::FindSong(std::string title, std::string artist) {
 cSong* cSnotify::FindSong(unsigned int uniqueID) {
 	bool found = false;
 	cSong* theSong = nullptr;
+	// Iterates through songs array
 	for (int i = 0; i < v_songs.getSize(); i++) {
 		theSong = v_songs.getAt(i);
+		// Checks if ID matches
 		if (theSong->getUniqueID() == uniqueID) {
 			found = true;
 			break;
