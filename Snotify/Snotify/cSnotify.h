@@ -17,8 +17,6 @@ class cSnotify
 public:
 	tDLList<cSong*>		v_songs;
 	tDLList<cPerson*>	v_users;
-	cMusicGenerator		m_musicGen;
-	cPersonGenerator	m_personGen;
 
 public:
 	cSnotify();

@@ -11,6 +11,7 @@ class cPerson
 {
 public:
 	cPerson();		// constructor (c'tor)
+	cPerson(const cPerson& rhs);
 	// Note: Think if you want this virtual or not...?
 	// if polymorphic (i.e. will inherit), the 
 	//	MAKE it a virtual destructor or you'll get a memory leak

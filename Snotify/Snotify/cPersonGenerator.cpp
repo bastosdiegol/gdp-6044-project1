@@ -217,7 +217,15 @@ cPerson* cPersonGenerator::generateRandomPerson(void) {
 	// Generates Random Age
 	newPerson->age = 8 + (rand() % 101);
 	// Generates Random SIN
-	newPerson->SIN = 100000000 + (rand() % 999999999);
+	newPerson->SIN = 1 + rand() % 9;
+	newPerson->SIN += (rand() % 10) * 10;
+	newPerson->SIN += (rand() % 10) * 100;
+	newPerson->SIN += (rand() % 10) * 1000;
+	newPerson->SIN += (rand() % 10) * 10000;
+	newPerson->SIN += (rand() % 10) * 100000;
+	newPerson->SIN += (rand() % 10) * 1000000;
+	newPerson->SIN += (rand() % 10) * 10000000;
+	newPerson->SIN += (rand() % 10) * 100000000;
 	// Generates Random Postal Code
 	newPerson->postalCode[0] = 'A' + rand() % 26;
 	newPerson->postalCode[1] = '0' + rand() % 10;
