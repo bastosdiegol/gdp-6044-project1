@@ -21,17 +21,168 @@ bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryA
 	// Inside this method, you'd do something like this:
 
 	// TODO: Find that user... 
-
 	// Alloate a heap based array to hold all the songs...
+	UserLibrary* userLib = getUserLibrary(snotifyUserID);
 
-//	sizeOfLibary = WhateverYouHaveToDoToGetThisValue();
-//	pCopyOfLibrary = new cSong[sizeOfLibary];
+	sizeOfLibary = userLib->songLibrary.getSize();
 
-	// The array and the size of the array are "returned" by reference to the caller. 
+	if (pLibraryArray > 0) {
+		pLibraryArray = new cSong[sizeOfLibary];
+		// The array and the size of the array are "returned" by reference to the caller. 
 
-	// TODO: Copy all the songs over
+		// TODO: Copy all the songs over
+		// Copies each user form the ordered to the array
+		for (int i = 0; i < sizeOfLibary; i++) {
+			UserSongInfo* songInfo = userLib->songLibrary.getAt(i);
+			pLibraryArray[i] = (*songInfo->theSong);
+			pLibraryArray[i].numberOfTimesPlayed = songInfo->numberOfTimesPlayed;
+			pLibraryArray[i].rating = songInfo->rating;
+		}
+		return true;
+	} else {
+		return false;
+	}
+	
+}
 
-	return true;
+bool cSnotify::GetUsersSongLibraryAscendingByTitle(unsigned int snotifyUserID, cSong*& pLibraryArray, unsigned int& sizeOfLibary) {
+	UserLibrary* userLib = getUserLibrary(snotifyUserID);
+
+	sizeOfLibary = userLib->songLibrary.getSize();
+
+	if (pLibraryArray > 0) {
+		pLibraryArray = new cSong[sizeOfLibary];
+
+		tDLList<cSong*> songsByTitle;
+
+		// Now we are going to iterate the songs array
+		// But we are going to copy ordered
+		for (int i = 0; i < sizeOfLibary; i++) {
+			// Copies the song to the array to be ordered
+			UserSongInfo* songInfo = userLib->songLibrary.getAt(i);
+			cSong* theSong = new cSong();
+			(*theSong) = (*songInfo->theSong);
+			// Copies the song info from users lib to the song
+			theSong->numberOfTimesPlayed = songInfo->numberOfTimesPlayed;
+			theSong->rating = songInfo->rating;
+
+			// First element
+			if (songsByTitle.getSize() == 0) {
+				songsByTitle.pushBack(theSong);
+			} else {
+				bool inserted = false;
+				// Now we gonna iterate through the ordered array
+				for (int j = 0; j < songsByTitle.getSize(); j++) {
+					cSong* theSongInOrder = songsByTitle.getAt(j);
+					// Checks if its different song
+					if (theSong->getUniqueID() != theSongInOrder->getUniqueID()) {
+						// Compares alphabetically the Title
+						if (theSong->name.compare(theSongInOrder->name) < 0) {
+							songsByTitle.addAt(j, theSong);
+							inserted = true;
+							break;
+						} 
+					} else {
+						inserted = true; // Song already inserted
+						break;
+					}
+				}
+				// After the loop, if no insertion put at the end
+				if (inserted == false) {
+					songsByTitle.pushBack(theSong);
+				}
+			}
+		}
+
+		// Copies the ordered array to the reference variable
+		for (int i = 0; i < sizeOfLibary; i++) {
+			pLibraryArray[i] = (*songsByTitle.getAt(i));
+		}
+
+		// Clears the ordered array
+		int index = songsByTitle.getSize() - 1;
+		while (index >= 0) {
+			// Delete the song pointer
+			delete songsByTitle.getAt(index);
+			// Removes the node pointing to null from the list
+			songsByTitle.removeAt(index);
+			index--;
+		}
+
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool cSnotify::GetUsersSongLibraryAscendingByArtist(unsigned int snotifyUserID, cSong*& pLibraryArray, unsigned int& sizeOfLibary) {
+	UserLibrary* userLib = getUserLibrary(snotifyUserID);
+
+	sizeOfLibary = userLib->songLibrary.getSize();
+
+	if (pLibraryArray > 0) {
+		pLibraryArray = new cSong[sizeOfLibary];
+
+		tDLList<cSong*> songsByTitle;
+
+		// Now we are going to iterate the songs array
+		// But we are going to copy ordered
+		for (int i = 0; i < sizeOfLibary; i++) {
+			// Copies the song to the array to be ordered
+			UserSongInfo* songInfo = userLib->songLibrary.getAt(i);
+			cSong* theSong = new cSong();
+			(*theSong) = (*songInfo->theSong);
+			// Copies the song info from users lib to the song
+			theSong->numberOfTimesPlayed = songInfo->numberOfTimesPlayed;
+			theSong->rating = songInfo->rating;
+
+			// First element
+			if (songsByTitle.getSize() == 0) {
+				songsByTitle.pushBack(theSong);
+			} else {
+				bool inserted = false;
+				// Now we gonna iterate through the ordered array
+				for (int j = 0; j < songsByTitle.getSize(); j++) {
+					cSong* theSongInOrder = songsByTitle.getAt(j);
+					// Checks if its different song
+					if (theSong->getUniqueID() != theSongInOrder->getUniqueID()) {
+						// Compares alphabetically the Artist
+						if (theSong->artist.compare(theSongInOrder->artist) < 0) {
+							songsByTitle.addAt(j, theSong);
+							inserted = true;
+							break;
+						}
+					} else {
+						inserted = true; // Song already inserted
+						break;
+					}
+				}
+				// After the loop, if no insertion put at the end
+				if (inserted == false) {
+					songsByTitle.pushBack(theSong);
+				}
+			}
+		}
+
+		// Copies the ordered array to the reference variable
+		for (int i = 0; i < sizeOfLibary; i++) {
+			pLibraryArray[i] = (*songsByTitle.getAt(i));
+		}
+
+		// Clears the ordered array
+		int index = songsByTitle.getSize() - 1;
+		while (index >= 0) {
+			// Delete the song pointer
+			delete songsByTitle.getAt(index);
+			// Removes the node pointing to null from the list
+			songsByTitle.removeAt(index);
+			index--;
+		}
+
+		return true;
+	} else {
+		return false;
+	}
 }
 
 bool cSnotify::GetUsers(cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray) {
@@ -141,28 +292,182 @@ bool cSnotify::FindUsersFirstName(std::string firstName, cPerson*& pAllTheUsers,
 		}
 		
 	}
+	
+	// Checks if theres person with the desired name
+	if (usersByFirstName.getSize() > 0) {
+		// Gets the size of the user array
+		sizeOfUserArray = usersByFirstName.getSize();
+		// Instantiate the array with that size
+		pAllTheUsers = new cPerson[sizeOfUserArray];
 
-	// Gets the size of the user array
-	sizeOfUserArray = usersByFirstName.getSize();
-	// Instantiate the array with that size
-	pAllTheUsers = new cPerson[sizeOfUserArray];
+		// Copies each user form the ordered to the array
+		for (int i = 0; i < usersByFirstName.getSize(); i++) {
+			pAllTheUsers[i] = (*usersByFirstName.getAt(i));
+		}
 
-	// Copies each user form the ordered to the array
-	for (int i = 0; i < usersByFirstName.getSize(); i++) {
-		pAllTheUsers[i] = (*usersByFirstName.getAt(i));
+		// Clears the ordered array
+		int index = usersByFirstName.getSize() - 1;
+		while (index >= 0) {
+			// Delete the song pointer
+			delete usersByFirstName.getAt(index);
+			// Removes the node pointing to null from the list
+			usersByFirstName.removeAt(index);
+			index--;
+		}
+
+		return true;
+	} else {
+		sizeOfUserArray = 0;
+		return false;
+	}
+	
+}
+
+bool cSnotify::FindUsersLastName(std::string lastName, cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray) {
+	tDLList<cPerson*> usersByLastName;
+
+	// Now we are going to iterate the users array and copy each node to v_usersByID
+	// But we are going to copy ordered
+	for (int i = 0; i < v_users.getSize(); i++) {
+		cPerson* thePerson = v_users.getAt(i);
+		if (thePerson->last == lastName) {
+			// First element
+			if (usersByLastName.getSize() == 0) {
+				usersByLastName.pushBack(thePerson);
+			} else {
+				bool inserted = false;
+				// Now we gonna iterate through the ordered array
+				for (int j = 0; j < usersByLastName.getSize(); j++) {
+					cPerson* thePersonInOrder = usersByLastName.getAt(j);
+					// Checks if its different user
+					if (thePerson->getSnotifyUniqueUserID() != thePersonInOrder->getSnotifyUniqueUserID()) {
+						// Compares alphabetically the Middle name
+						if (thePerson->middle.compare(thePersonInOrder->middle) < 0) {
+							usersByLastName.addAt(j, thePerson);
+							inserted = true;
+							break;
+							// If its equal, compare the Last name
+						} else if (thePerson->middle.compare(thePersonInOrder->middle) == 0 &&
+							thePerson->last.compare(thePersonInOrder->last) < 0) {
+							usersByLastName.addAt(j, thePerson);
+							inserted = true;
+							break;
+						}
+					} else {
+						inserted = true; // User already exists
+						break;
+					}
+				}
+				// After the loop, if no insertion put at the end
+				if (inserted == false) {
+					usersByLastName.pushBack(thePerson);
+				}
+			}
+		}
+
 	}
 
-	// Clears the ordered array
-	int index = usersByFirstName.getSize() - 1;
-	while (index >= 0) {
-		// Delete the song pointer
-		delete usersByFirstName.getAt(index);
-		// Removes the node pointing to null from the list
-		usersByFirstName.removeAt(index);
-		index--;
+	// Checks if theres person with desired last name
+	if (usersByLastName.getSize() > 0) {
+		// Gets the size of the user array
+		sizeOfUserArray = usersByLastName.getSize();
+		// Instantiate the array with that size
+		pAllTheUsers = new cPerson[sizeOfUserArray];
+
+		// Copies each user form the ordered to the array
+		for (int i = 0; i < usersByLastName.getSize(); i++) {
+			pAllTheUsers[i] = (*usersByLastName.getAt(i));
+		}
+
+		// Clears the ordered array
+		int index = usersByLastName.getSize() - 1;
+		while (index >= 0) {
+			// Delete the song pointer
+			delete usersByLastName.getAt(index);
+			// Removes the node pointing to null from the list
+			usersByLastName.removeAt(index);
+			index--;
+		}
+
+		return true;
+	} else {
+		sizeOfUserArray = 0;
+		return false;
+	}
+	
+}
+
+bool cSnotify::FindUsersFirstLastNames(std::string firstName, std::string lastName, cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray) {
+	tDLList<cPerson*> usersByLastName;
+
+	// Now we are going to iterate the users array and copy each node to v_usersByID
+	// But we are going to copy ordered
+	for (int i = 0; i < v_users.getSize(); i++) {
+		cPerson* thePerson = v_users.getAt(i);
+		if (thePerson->first == firstName && thePerson->last == lastName) {
+			// First element
+			if (usersByLastName.getSize() == 0) {
+				usersByLastName.pushBack(thePerson);
+			} else {
+				bool inserted = false;
+				// Now we gonna iterate through the ordered array
+				for (int j = 0; j < usersByLastName.getSize(); j++) {
+					cPerson* thePersonInOrder = usersByLastName.getAt(j);
+					// Checks if its different user
+					if (thePerson->getSnotifyUniqueUserID() != thePersonInOrder->getSnotifyUniqueUserID()) {
+						// Compares alphabetically the Middle name
+						if (thePerson->middle.compare(thePersonInOrder->middle) < 0) {
+							usersByLastName.addAt(j, thePerson);
+							inserted = true;
+							break;
+							// If its equal, compare the Last name
+						} else if (thePerson->middle.compare(thePersonInOrder->middle) == 0 &&
+							thePerson->last.compare(thePersonInOrder->last) < 0) {
+							usersByLastName.addAt(j, thePerson);
+							inserted = true;
+							break;
+						}
+					} else {
+						inserted = true; // User already exists
+						break;
+					}
+				}
+				// After the loop, if no insertion put at the end
+				if (inserted == false) {
+					usersByLastName.pushBack(thePerson);
+				}
+			}
+		}
+
 	}
 
-	return true;
+	// Checks if theres person with desired last name
+	if (usersByLastName.getSize() > 0) {
+		// Gets the size of the user array
+		sizeOfUserArray = usersByLastName.getSize();
+		// Instantiate the array with that size
+		pAllTheUsers = new cPerson[sizeOfUserArray];
+
+		// Copies each user form the ordered to the array
+		for (int i = 0; i < usersByLastName.getSize(); i++) {
+			pAllTheUsers[i] = (*usersByLastName.getAt(i));
+		}
+
+		// Clears the ordered array
+		int index = usersByLastName.getSize() - 1;
+		while (index >= 0) {
+			// Delete the song pointer
+			delete usersByLastName.getAt(index);
+			// Removes the node pointing to null from the list
+			usersByLastName.removeAt(index);
+			index--;
+		}
+
+		return true;
+	} else {
+		sizeOfUserArray = 0;
+		return false;
+	}
 }
 
 UserLibrary* cSnotify::getUserLibrary(unsigned int SnotifyUserID) {
