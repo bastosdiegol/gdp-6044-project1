@@ -68,16 +68,29 @@ int main(int argc, char* argv[]) {
 		std::cout << "Song rating updated." << std::endl;
 	}
 
-	if (!g_snotify.RemoveSongFromUserLibrary(thePerson->getSnotifyUniqueUserID(), theSong->getUniqueID(), errorMsg)) {
-		std::cout << "Song Lib del failed: " << errorMsg << std::endl;
-	} else {
-		std::cout << "Song removed to the user library." << std::endl;
-	}
+	//if (!g_snotify.RemoveSongFromUserLibrary(thePerson->getSnotifyUniqueUserID(), theSong->getUniqueID(), errorMsg)) {
+	//	std::cout << "Song Lib del failed: " << errorMsg << std::endl;
+	//} else {
+	//	std::cout << "Song removed to the user library." << std::endl;
+	//}
 
 	if (!g_snotify.UpdateUser(thePerson, errorMsg)) {
 		std::cout << "Update failed: " << errorMsg << std::endl;
 	} else {
 		std::cout << "User name updated." << std::endl;
 	}
+
+	if (!g_snotify.DeleteSong(theSong->getUniqueID(), errorMsg)) {
+		std::cout << "Delete song failed: " << errorMsg << std::endl;
+	} else {
+		std::cout << "Song deleted successfully." << std::endl;
+	}
+
+	if (!g_snotify.DeleteUser(thePerson->getSnotifyUniqueUserID(), errorMsg)) {
+		std::cout << "Delete user failed: " << errorMsg << std::endl;
+	} else {
+		std::cout << "User deleted successfully." << std::endl;
+	}
+
 	return 0;
 }

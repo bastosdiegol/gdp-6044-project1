@@ -117,7 +117,10 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString) {
 	(*newPerson) = (*pPerson);
 	// Checks if its nullptr
 	if (newPerson != nullptr) {
-		if (newPerson->first.empty() || newPerson->last.empty()) {
+		if (newPerson->age <= 0) {
+			errorString = "This person has an invalid age.";
+			return false;
+		} else if (newPerson->first.empty() || newPerson->last.empty()) {
 			errorString = "This person has no first or last name.";
 			return false;
 		} else if (newPerson->city.empty() || newPerson->province.empty()) {
@@ -177,6 +180,22 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString) {
 bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString) {
 	bool found = false;
 	cPerson* thePerson = nullptr;
+	if (pPerson->age <= 0) {
+		errorString = "The person has an invalid age.";
+		return false;
+	} else if (pPerson->first.empty() || pPerson->last.empty()) {
+		errorString = "This person has no first or last name.";
+		return false;
+	} else if (pPerson->city.empty() || pPerson->province.empty()) {
+		errorString = "This person has no province or city informed.";
+		return false;
+	} else if (pPerson->streetNumber < 0) {
+		errorString = "This person street number is invalid. (Less than zero)";
+		return false;
+	} else if (pPerson->streetName.empty() || pPerson->streetType.empty()) {
+		errorString = "This person street name or type is empty.";
+		return false;
+	}
 	// Iterates through users array
 	for (int i = 0; i < v_users.getSize(); i++) {
 		thePerson = v_users.getAt(i);
@@ -194,6 +213,34 @@ bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString) {
 		errorString = "No existing user on Snotify has the same SIN and ID. Updated failed.";
 		return false;
 	}
+}
+
+bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString) {
+	cPerson* thePerson = FindUserBySnotifyID(SnotifyUserID);
+	if (thePerson) {
+		UserLibrary* userLib = getUserLibrary(SnotifyUserID);
+		// Removes every song on the user library
+		if (userLib) {
+			int index = userLib->songLibrary.getSize() - 1;
+			while (index >= 0) {
+				// Delete the song pointer
+				delete userLib->songLibrary.getAt(index);
+				// Removes the node pointing to null from the list
+				userLib->songLibrary.removeAt(index);
+				index--;
+			}
+		}
+		// Deletes the library
+		v_usersSongLib.remove(userLib);
+		delete userLib;
+		// Deletes the user
+		v_users.remove(thePerson);
+		delete thePerson;
+	} else {
+		errorString = "User not found.";
+		return false;
+	}
+	return true;
 }
 
 bool cSnotify::AddSong(cSong* pSong, std::string& errorString) {
@@ -234,6 +281,48 @@ bool cSnotify::AddSong(cSong* pSong, std::string& errorString) {
 		errorString = "Dear user, if you want to add a song, please pass a song information...";
 		return false;
 	}
+}
+
+bool cSnotify::UpdateSong(cSong* pSong, std::string& errorString) {
+	cSong* theSong = FindSong(pSong->getUniqueID());
+	if (theSong) {
+
+	}
+	return false;
+}
+
+bool cSnotify::DeleteSong(unsigned int UniqueSongID, std::string& errorString) {
+	UserLibrary* userLib;
+	UserSongInfo* userSongInfo;
+	// Gets the song
+	cSong* theSong = FindSong(UniqueSongID);
+	// Checks if the song exists
+	if (theSong) {
+		// Now lets iterates through all libraries and remove them
+		for (int i = 0; i < v_usersSongLib.getSize(); i++) {
+			userLib = v_usersSongLib.getAt(i);
+			for (int j = 0; j < userLib->songLibrary.getSize(); j++) {
+				userSongInfo = userLib->songLibrary.getAt(j);
+				// Checks if theres Song if
+				if (userSongInfo) {
+					if (userSongInfo->theSong->getUniqueID() == UniqueSongID) {
+						// Removes the SongInfo on User Lib
+						delete userSongInfo;
+						// Clears the slot on the array
+						userLib->songLibrary.removeAt(j);
+					}
+				}
+			}
+		} // All data removed from user libraries
+		// Now we remove the song
+		v_songs.remove(theSong);
+		delete theSong;
+		return true;
+	} else {
+		errorString = "The song to be deleted doesn't exist on the Snotify.";
+		return false;
+	}
+	return true;
 }
 
 bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong, std::string& errorString) {
