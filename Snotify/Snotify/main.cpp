@@ -80,6 +80,16 @@ int main(int argc, char* argv[]) {
 		std::cout << "User name updated." << std::endl;
 	}
 
+	thePerson = g_snotify.FindUserBySnotifyID(3956);
+	thePerson->first = "Diego";
+	thePerson->middle = "Lima";
+	thePerson->last = "Lastos";
+	g_snotify.UpdateUser(thePerson, errorMsg);
+
+	cPerson* allUsers;
+	unsigned int size;
+	g_snotify.FindUsersFirstName("Diego", allUsers, size);
+
 	if (!g_snotify.DeleteSong(theSong->getUniqueID(), errorMsg)) {
 		std::cout << "Delete song failed: " << errorMsg << std::endl;
 	} else {

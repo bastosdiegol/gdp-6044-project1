@@ -29,6 +29,7 @@ private:
 	UserLibrary* getUserLibrary(unsigned int SnotifyUserID);
 	UserSongInfo* getUserSongInfo(unsigned int SnotifyUserID, unsigned int songUniqueID);
 
+
 public:
 	tDLList<cSong*>			v_songs;
 	tDLList<cPerson*>		v_users;

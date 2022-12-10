@@ -34,9 +34,139 @@ bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryA
 	return true;
 }
 
+bool cSnotify::GetUsers(cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray) {
+	// Gets the size of the user array
+	sizeOfUserArray = v_users.getSize();
+	// Instantiate the array with that size
+	pAllTheUsers = new cPerson[sizeOfUserArray];
+	// Copies each user to the array
+	for (int i = 0; i < v_users.getSize(); i++) {
+		pAllTheUsers[i] = (*v_users.getAt(i));
+	}
+	return true;
+}
+
+bool cSnotify::GetUsersByID(cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray) {
+	// Gets the size of the user array
+	sizeOfUserArray = v_users.getSize();
+	// Instantiate the array with that size
+	pAllTheUsers = new cPerson[sizeOfUserArray];
+
+	tDLList<cPerson*> usersByID;
+
+	// Now we are going to iterate the users array and copy each node to v_usersByID
+	// But we are going to copy ordered
+	for (int i = 0; i < v_users.getSize(); i++) {
+		// First element
+		if (i == 0) {
+			usersByID.pushBack(v_users.getAt(i));
+		} else {
+			cPerson* thePerson = v_users.getAt(i);
+			bool inserted = false;
+			// Now we gonna iterate through the ordered array
+			for (int j = 0; j < usersByID.getSize(); j++) {
+				cPerson* thePersonInOrder = usersByID.getAt(j);
+				// The current person the be added has lower ID
+				if (thePerson->getSnotifyUniqueUserID() < thePersonInOrder->getSnotifyUniqueUserID()) {
+					usersByID.addAt(j, thePerson);
+					inserted = true;
+					break;
+				}
+			}
+			// After the loop no user was found with higher ID
+			if (inserted == false) {
+				usersByID.pushBack(thePerson);
+			}
+		}
+	}
+
+	// Copies each user form the ordered to the array
+	for (int i = 0; i < usersByID.getSize(); i++) {
+		pAllTheUsers[i] = (*usersByID.getAt(i));
+	}
+
+	// Clears the ordered array
+	int index = usersByID.getSize() - 1;
+	while (index >= 0) {
+		// Delete the song pointer
+		delete usersByID.getAt(index);
+		// Removes the node pointing to null from the list
+		usersByID.removeAt(index);
+		index--;
+	}
+
+	return true;
+}
+
+bool cSnotify::FindUsersFirstName(std::string firstName, cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray) {
+	tDLList<cPerson*> usersByFirstName;
+
+	// Now we are going to iterate the users array and copy each node to v_usersByID
+	// But we are going to copy ordered
+	for (int i = 0; i < v_users.getSize(); i++) {
+		cPerson* thePerson = v_users.getAt(i);
+		if (thePerson->first == firstName) {
+			// First element
+			if (usersByFirstName.getSize() == 0) {
+				usersByFirstName.pushBack(thePerson);
+			} else {
+				bool inserted = false;
+				// Now we gonna iterate through the ordered array
+				for (int j = 0; j < usersByFirstName.getSize(); j++) {
+					cPerson* thePersonInOrder = usersByFirstName.getAt(j);
+					// Checks if its different user
+					if (thePerson->getSnotifyUniqueUserID() != thePersonInOrder->getSnotifyUniqueUserID()) {
+						// Compares alphabetically the Middle name
+						if (thePerson->middle.compare(thePersonInOrder->middle) < 0) {
+							usersByFirstName.addAt(j, thePerson);
+							inserted = true;
+							break;
+							// If its equal, compare the Last name
+						} else if (thePerson->middle.compare(thePersonInOrder->middle) == 0 &&
+							thePerson->last.compare(thePersonInOrder->last) < 0) {
+							usersByFirstName.addAt(j, thePerson);
+							inserted = true;
+							break;
+						}
+					} else {
+						inserted = true; // User already exists
+						break;
+					}
+				}
+				// After the loop, if no insertion put at the end
+				if (inserted == false) {
+					usersByFirstName.pushBack(thePerson);
+				}
+			}
+		}
+		
+	}
+
+	// Gets the size of the user array
+	sizeOfUserArray = usersByFirstName.getSize();
+	// Instantiate the array with that size
+	pAllTheUsers = new cPerson[sizeOfUserArray];
+
+	// Copies each user form the ordered to the array
+	for (int i = 0; i < usersByFirstName.getSize(); i++) {
+		pAllTheUsers[i] = (*usersByFirstName.getAt(i));
+	}
+
+	// Clears the ordered array
+	int index = usersByFirstName.getSize() - 1;
+	while (index >= 0) {
+		// Delete the song pointer
+		delete usersByFirstName.getAt(index);
+		// Removes the node pointing to null from the list
+		usersByFirstName.removeAt(index);
+		index--;
+	}
+
+	return true;
+}
+
 UserLibrary* cSnotify::getUserLibrary(unsigned int SnotifyUserID) {
 	bool userFound = false;
-	bool songIndex;
 	UserLibrary* theLib = nullptr;
 	// Iterates through usersSongLibrary array
 	for (int i = 0; i < v_usersSongLib.getSize(); i++) {
@@ -503,3 +633,5 @@ cSong* cSnotify::FindSong(unsigned int uniqueID) {
 		return nullptr;
 	}
 }
+
+

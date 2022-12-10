@@ -151,7 +151,7 @@ inline void tDLList<T>::addAt(int index, T data) {
 	// Its in between somewhere
 	} else { 
 		// Creates the new Node
-		tNode<T>* newNode = tNode<T>(data);
+		tNode<T>* newNode = new tNode<T>(data);
 		// Gets the current Node at same index
 		tNode<T>* curNode = getNodeAt(index);
 
