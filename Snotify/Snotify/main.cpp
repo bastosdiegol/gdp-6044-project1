@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
 	std::string errorMsg;
 	m_musicGen->LoadMusicInformation(SONGS_FILE, errorMsg);
 	int duplicated = 0;
-	int songsToTransfer = 2000;
+	int songsToTransfer = 1000;
 	std::cout << "Now transfering random songs from MusicGenerator to Snotify..." << std::endl;
 	std::cout << "Trying to add " << songsToTransfer << " random songs to the Snotify." << std::endl;
 	for (int i = 0; i < songsToTransfer; i++) {
@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
 	std::cout << "Number of Names Loaded:" << m_personGen->getNumberOfNamesLoaded() << std::endl;
 	std::cout << "Number of Streets Loaded:" << m_personGen->getNumberOfStreetsLoaded() << std::endl;
 	std::cout << "Number of Surames Loaded:" << m_personGen->getNumberOfSurnamesLoaded() << std::endl;
-	for (int i = 0; i < g_snotify.v_users.getSize(); i++) {
-		cPerson* p = g_snotify.v_users.getAt(i);
-		std::cout << "Person " << i << ": " << p->first << " " << p->middle << " " << p->last << std::endl;
-	}
+	//for (int i = 0; i < g_snotify.v_users.getSize(); i++) {
+	//	cPerson* p = g_snotify.v_users.getAt(i);
+	//	std::cout << "Person " << i << ": " << p->first << " " << p->middle << " " << p->last << std::endl;
+	//}
 	cPerson* allUsers;
 	cSong* userLib;
 	unsigned int size;
@@ -52,20 +52,20 @@ int main(int argc, char* argv[]) {
 	//541991212
 	cPerson* thePerson = g_snotify.FindUserBySIN(183170504);
 	// 52689
-	cSong* theSong = g_snotify.FindSong(52689);
+	cSong* theSong = g_snotify.FindSong(4309);
 	if (!g_snotify.AddSongToUserLibrary(thePerson->getSnotifyUniqueUserID(), theSong, errorMsg)) {
 		std::cout << "Song Lib add failed: " << errorMsg << std::endl;
 	} else {
 		std::cout << "Song added to the user library." << std::endl;
 	}
 	// 37105
-	theSong = g_snotify.FindSong(37105);
+	theSong = g_snotify.FindSong(44642);
 	if (!g_snotify.AddSongToUserLibrary(thePerson->getSnotifyUniqueUserID(), theSong, errorMsg)) {
 		std::cout << "Song Lib add failed: " << errorMsg << std::endl;
 	} else {
 		std::cout << "Song added to the user library." << std::endl;
 	}
-	theSong = g_snotify.FindSong(4309);
+	theSong = g_snotify.FindSong(53275);
 	if (!g_snotify.AddSongToUserLibrary(thePerson->getSnotifyUniqueUserID(), theSong, errorMsg)) {
 		std::cout << "Song Lib add failed: " << errorMsg << std::endl;
 	} else {
@@ -101,11 +101,11 @@ int main(int argc, char* argv[]) {
 	//	std::cout << "Song removed to the user library." << std::endl;
 	//}
 
-	if (!g_snotify.UpdateUser(thePerson, errorMsg)) {
-		std::cout << "Update failed: " << errorMsg << std::endl;
-	} else {
-		std::cout << "User name updated." << std::endl;
-	}
+	//if (!g_snotify.UpdateUser(thePerson, errorMsg)) {
+	//	std::cout << "Update failed: " << errorMsg << std::endl;
+	//} else {
+	//	std::cout << "User name updated." << std::endl;
+	//}
 
 	//thePerson = g_snotify.FindUserBySnotifyID(3956);
 	//thePerson->first = "Diego";
@@ -121,11 +121,11 @@ int main(int argc, char* argv[]) {
 		std::cout << "Song deleted successfully." << std::endl;
 	}
 
-	if (!g_snotify.DeleteUser(thePerson->getSnotifyUniqueUserID(), errorMsg)) {
-		std::cout << "Delete user failed: " << errorMsg << std::endl;
-	} else {
-		std::cout << "User deleted successfully." << std::endl;
-	}
+	//if (!g_snotify.DeleteUser(thePerson->getSnotifyUniqueUserID(), errorMsg)) {
+	//	std::cout << "Delete user failed: " << errorMsg << std::endl;
+	//} else {
+	//	std::cout << "User deleted successfully." << std::endl;
+	//}
 
 	return 0;
 }

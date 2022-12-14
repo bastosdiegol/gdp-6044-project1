@@ -153,7 +153,8 @@ inline void tDLList<T>::addAt(int index, T data) {
 		// Creates the new Node
 		tNode<T>* newNode = new tNode<T>(data);
 		// Gets the current Node at same index
-		tNode<T>* curNode = getNodeAt(index);
+		tNode<T>* curNode = nullptr;
+		curNode = getNodeAt(index);
 
 		// Links the new node with previous and next
 		newNode->m_previous = curNode->m_previous;
@@ -204,7 +205,8 @@ inline void tDLList<T>::removeAt(int index) {
 			m_tail = previous;
 		} else {
 			// Gets the Node
-			tNode<T>* node = getNodeAt(index);
+			tNode<T>* node = nullptr;
+			node = getNodeAt(index);
 			// Links previous node with the next
 			node->m_previous->m_next = node->m_next;
 			// Links next node with previous
@@ -225,7 +227,7 @@ inline tNode<T>* tDLList<T>::getNodeAt(int index) {
 	} else if (index == m_size - 1) { // Checks if its the tail
 		return m_tail;
 	} else if (index < 0 || index >= m_size) { // Checks for invalid position
-		throw("Out of Range Exception!");
+		return nullptr;
 	}
 
 	// Checks the desired index
@@ -259,7 +261,7 @@ inline T tDLList<T>::getAt(int index) {
 	} else if (index == m_size - 1) { // Checks if its the tail
 		return m_tail->getData();
 	} else if (index < 0 || index >= m_size) { // Checks for invalid position
-		throw("Out of Range Exception!");
+		return nullptr;
 	}
 
 	// Checks the desired index

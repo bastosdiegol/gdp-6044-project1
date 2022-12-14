@@ -26,14 +26,15 @@ bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryA
 
 	sizeOfLibary = userLib->songLibrary.getSize();
 
-	if (pLibraryArray > 0) {
+	if (sizeOfLibary > 0) {
 		pLibraryArray = new cSong[sizeOfLibary];
 		// The array and the size of the array are "returned" by reference to the caller. 
 
 		// TODO: Copy all the songs over
 		// Copies each user form the ordered to the array
 		for (int i = 0; i < sizeOfLibary; i++) {
-			UserSongInfo* songInfo = userLib->songLibrary.getAt(i);
+			UserSongInfo* songInfo = nullptr;
+			songInfo = userLib->songLibrary.getAt(i);
 			pLibraryArray[i] = (*songInfo->theSong);
 			pLibraryArray[i].numberOfTimesPlayed = songInfo->numberOfTimesPlayed;
 			pLibraryArray[i].rating = songInfo->rating;
@@ -50,7 +51,7 @@ bool cSnotify::GetUsersSongLibraryAscendingByTitle(unsigned int snotifyUserID, c
 
 	sizeOfLibary = userLib->songLibrary.getSize();
 
-	if (pLibraryArray > 0) {
+	if (sizeOfLibary > 0) {
 		pLibraryArray = new cSong[sizeOfLibary];
 
 		tDLList<cSong*> songsByTitle;
@@ -120,7 +121,7 @@ bool cSnotify::GetUsersSongLibraryAscendingByArtist(unsigned int snotifyUserID, 
 
 	sizeOfLibary = userLib->songLibrary.getSize();
 
-	if (pLibraryArray > 0) {
+	if (sizeOfLibary > 0) {
 		pLibraryArray = new cSong[sizeOfLibary];
 
 		tDLList<cSong*> songsByTitle;
@@ -255,7 +256,8 @@ bool cSnotify::FindUsersFirstName(std::string firstName, cPerson*& pAllTheUsers,
 	// Now we are going to iterate the users array and copy each node to v_usersByID
 	// But we are going to copy ordered
 	for (int i = 0; i < v_users.getSize(); i++) {
-		cPerson* thePerson = v_users.getAt(i);
+		cPerson* thePerson = nullptr;
+		thePerson = v_users.getAt(i);
 		if (thePerson->first == firstName) {
 			// First element
 			if (usersByFirstName.getSize() == 0) {
@@ -264,7 +266,8 @@ bool cSnotify::FindUsersFirstName(std::string firstName, cPerson*& pAllTheUsers,
 				bool inserted = false;
 				// Now we gonna iterate through the ordered array
 				for (int j = 0; j < usersByFirstName.getSize(); j++) {
-					cPerson* thePersonInOrder = usersByFirstName.getAt(j);
+					cPerson* thePersonInOrder = nullptr;
+					thePersonInOrder = usersByFirstName.getAt(j);
 					// Checks if its different user
 					if (thePerson->getSnotifyUniqueUserID() != thePersonInOrder->getSnotifyUniqueUserID()) {
 						// Compares alphabetically the Middle name
@@ -329,7 +332,8 @@ bool cSnotify::FindUsersLastName(std::string lastName, cPerson*& pAllTheUsers, u
 	// Now we are going to iterate the users array and copy each node to v_usersByID
 	// But we are going to copy ordered
 	for (int i = 0; i < v_users.getSize(); i++) {
-		cPerson* thePerson = v_users.getAt(i);
+		cPerson* thePerson = nullptr;
+		thePerson = v_users.getAt(i);
 		if (thePerson->last == lastName) {
 			// First element
 			if (usersByLastName.getSize() == 0) {
@@ -338,7 +342,8 @@ bool cSnotify::FindUsersLastName(std::string lastName, cPerson*& pAllTheUsers, u
 				bool inserted = false;
 				// Now we gonna iterate through the ordered array
 				for (int j = 0; j < usersByLastName.getSize(); j++) {
-					cPerson* thePersonInOrder = usersByLastName.getAt(j);
+					cPerson* thePersonInOrder = nullptr;
+					thePersonInOrder = usersByLastName.getAt(j);
 					// Checks if its different user
 					if (thePerson->getSnotifyUniqueUserID() != thePersonInOrder->getSnotifyUniqueUserID()) {
 						// Compares alphabetically the Middle name
@@ -582,8 +587,9 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString) {
 			} else {
 				// Checks if it already exists
 				for (int i = 0; i < v_users.getSize(); i++) {
-					cPerson* thePerson = v_users.getAt(i);
-					if (thePerson->SIN == newPerson->SIN) {
+					cPerson* thePerson = nullptr;
+					thePerson = v_users.getAt(i);
+					if (thePerson->SIN == newPerson->SIN || thePerson->getSnotifyUniqueUserID() == newPerson->getSnotifyUniqueUserID()) {
 						duplicated = true;
 						break;
 					}
@@ -695,9 +701,11 @@ bool cSnotify::AddSong(cSong* pSong, std::string& errorString) {
 			} else {
 				// Checks if it already exists
 				for (int i = 0; i < v_songs.getSize(); i++) {
-					cSong* theSong = v_songs.getAt(i);
-					if ((theSong->name.compare(newSong->name) == 0) &&
-						(theSong->artist.compare(newSong->artist) == 0)) {
+					cSong* theSong = nullptr;
+					theSong = v_songs.getAt(i);
+					if (((theSong->name.compare(newSong->name) == 0) &&
+						(theSong->artist.compare(newSong->artist) == 0)) ||
+						theSong->getUniqueID() == newSong->getUniqueID()) {
 						duplicated = true;
 					}
 				}
@@ -727,8 +735,8 @@ bool cSnotify::UpdateSong(cSong* pSong, std::string& errorString) {
 }
 
 bool cSnotify::DeleteSong(unsigned int UniqueSongID, std::string& errorString) {
-	UserLibrary* userLib;
-	UserSongInfo* userSongInfo;
+	UserLibrary* userLib = nullptr;
+	UserSongInfo* userSongInfo = nullptr;
 	// Gets the song
 	cSong* theSong = FindSong(UniqueSongID);
 	// Checks if the song exists
